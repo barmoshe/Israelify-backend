@@ -18,18 +18,22 @@ app.use(express.json());
 app.use(express.static("public"));
 
 if (process.env.NODE_ENV === "production") {
+  console.log("production environment");
   // Express serve static files on production environment
   app.use(express.static(path.resolve(__dirname, "public")));
   console.log("__dirname: ", __dirname);
 } else {
+
+  console.log("development environment");
+
   // Configuring CORS
   const corsOptions = {
     // Make sure origin contains the url your frontend is running on
     origin: [
       "http://127.0.0.1:5173",
       "http://localhost:5173",
-      "http://127.0.0.1:3000",
-      "http://localhost:3000",
+      "http://127.0.0.1:3030",
+      "http://localhost:3030",
     ],
     credentials: true,
   };
@@ -39,6 +43,7 @@ if (process.env.NODE_ENV === "production") {
 import { authRoutes } from "./api/auth/auth.routes.js";
 import { userRoutes } from "./api/user/user.routes.js";
 import { stationRoutes } from "./api/station/station.routes.js";
+import { log } from "console";
 
 // routes
 app.use("/api/auth", authRoutes);
