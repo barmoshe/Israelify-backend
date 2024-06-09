@@ -64,7 +64,7 @@ async function update(station) {
     );
     return station;
   } catch (err) {
-    logger.error(`cannot update car ${station._id}`, err);
+    logger.error(`cannot update station ${station._id}`, err);
     throw err;
   }
 }

@@ -1,5 +1,6 @@
 import configProd from "./prod.js";
 import configDev from "./dev.js";
+import "dotenv/config";
 
 export var config;
 
