@@ -1,4 +1,5 @@
 import express from "express";
+import http from 'http'
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path, { dirname } from "path";
@@ -11,6 +12,8 @@ const __dirname = dirname(__filename);
 logger.info("server.js loaded...");
 
 const app = express();
+const server = http.createServer(app)
+
 
 // Express App Config
 app.use(cookieParser());
@@ -34,12 +37,15 @@ if (process.env.NODE_ENV === "production") {
 import { authRoutes } from "./api/auth/auth.routes.js";
 import { userRoutes } from "./api/user/user.routes.js";
 import { stationRoutes } from "./api/station/station.routes.js";
-import { log } from "console";
+import { setupSocketAPI } from './services/socket.service.js'
+
 
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/station", stationRoutes);
+
+setupSocketAPI(server)
 
 // Make every unmatched server-side-route fall back to index.html
 // So when requesting http://localhost:3030/index.html/car/123 it will still respond with
@@ -51,6 +57,6 @@ app.get("/**", (req, res) => {
 
 const port = process.env.PORT || 3030;
 
-app.listen(port, () => {
+server.listen(port, () => {
   logger.info("Server is running on port: " + port);
 });
