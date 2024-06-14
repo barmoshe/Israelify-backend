@@ -65,3 +65,14 @@ export async function removeStation(req, res) {
     res.status(500).send({ err: "Failed to remove station" });
   }
 }
+
+export async function getRecommendations(req, res) {
+  const userPrompt = req.body.userPrompt;
+  try {
+    const recommendations = await stationService.getRecommendations(userPrompt);
+    res.json(recommendations);
+  } catch (err) {
+    logger.error("Failed to get recommendations", err);
+    res.status(500).send({ err: "Failed to get recommendations" });
+  }
+}

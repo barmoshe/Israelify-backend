@@ -7,6 +7,7 @@ import {
   addStation,
   updateStation,
   removeStation,
+  getRecommendations,
 } from "./station.controller.js";
 
 export const stationRoutes = express.Router();
@@ -15,6 +16,7 @@ export const stationRoutes = express.Router();
 // router.use(requireAuth)
 
 stationRoutes.get("/", log, getStations);
+stationRoutes.get("/openai", getRecommendations);
 stationRoutes.get("/:id", getStationById);
 stationRoutes.post("/", addStation);
 stationRoutes.put("/", updateStation);

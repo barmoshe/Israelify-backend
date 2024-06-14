@@ -1,10 +1,12 @@
 import mongodb from "mongodb";
+import axios from "axios";
 const { ObjectId } = mongodb;
+import "dotenv/config";
 
 import { dbService } from "../../services/db.service.js";
 import { logger } from "../../services/logger.service.js";
-import { utilService } from "../../services/util.service.js";
 
+const OPENAI_API_KEY = process.env.OPEN_AI_API_KEY;
 async function query(filterBy = { txt: "" }) {
   try {
     const criteria = {};
@@ -69,10 +71,57 @@ async function update(station) {
   }
 }
 
+async function getRecommendations(userPrompt) {
+  const apiKey = OPENAI_API_KEY;
+  console.log("API KEY:", apiKey);
+  const url = "https://api.openai.com/v1/completions";
+
+  const requestBody = {
+    model: "gpt-3.5-turbo-instruct",
+    prompt: `You are an advanced music recommendation engine. Based on the user's input: "${userPrompt}", provide a list of 20 diverse song recommendations. Each recommendation should be formatted as follows:
+  - Song Name: [song name]
+  - Artist: [artist name]
+  Ensure that each recommendation is on a new line, clearly listed, and includes a variety of genres and artists.`,
+    temperature: 0.8,
+    max_tokens: 300,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  };
+
+  try {
+    const response = await axios.post(url, requestBody, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+
+    const recommendations = response.data.choices[0].text;
+    console.log("Recommendations:", response);
+    const lines = recommendations
+      .split("\n")
+      .filter((line) => line.trim() !== "");
+    const songs = [];
+    for (let i = 0; i < lines.length; i += 2) {
+      if (lines[i] && lines[i + 1]) {
+        const name = lines[i].replace("Song Name: ", "").trim();
+        const artist = lines[i + 1].replace("Artist: ", "").trim();
+        songs.push({ name, artist });
+      }
+    }
+    return songs;
+  } catch (err) {
+    logger.error("Failed to get recommendations", err);
+    throw err;
+  }
+}
+
 export const stationService = {
   query,
   getById,
   remove,
   add,
   update,
+  getRecommendations,
 };
