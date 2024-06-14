@@ -16,7 +16,7 @@ export const stationRoutes = express.Router();
 // router.use(requireAuth)
 
 stationRoutes.get("/", log, getStations);
-stationRoutes.get("/openai", getRecommendations);
+stationRoutes.post("/openai", getRecommendations);
 stationRoutes.get("/:id", getStationById);
 stationRoutes.post("/", addStation);
 stationRoutes.put("/", updateStation);
