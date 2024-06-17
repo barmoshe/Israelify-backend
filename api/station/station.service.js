@@ -11,7 +11,8 @@ async function query(filterBy = { txt: "" }) {
   try {
     const criteria = {};
     const collection = await dbService.getCollection("station");
-    var stations = await collection.find();
+    //sort collection by index ascending
+    var stations = await collection.find().sort({ index: 1 });
 
     return stations.toArray();
   } catch (err) {
