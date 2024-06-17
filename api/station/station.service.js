@@ -44,6 +44,7 @@ async function remove(stationId) {
 }
 
 async function add(station) {
+  const stationToAdd = { ...station, index: 1 };
   try {
     const collection = await dbService.getCollection("station");
     await collection.insertOne(station);
