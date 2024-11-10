@@ -26,6 +26,7 @@ async function _connect() {
   try {
     const client = await MongoClient.connect(config.dbURL, {
       useUnifiedTopology: true,
+      
     });
     // const client = await MongoClient.connect(config.dbURL)
     const db = client.db(config.dbName);
