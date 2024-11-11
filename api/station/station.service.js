@@ -74,8 +74,11 @@ async function update(station) {
 }
 
 async function getRecommendations(userPrompt) {
-  const apiKey = OPENAI_API_KEY;
+  let apiKey = OPENAI_API_KEY;
   console.log("API KEY:", apiKey);
+  console.log("userPrompt", userPrompt);
+  //remove  the char "‘" from apikey to avoid error
+  apiKey = apiKey.replace("‘", "");
   const url = "https://api.openai.com/v1/completions";
 
   const requestBody = {
